@@ -364,6 +364,118 @@ describe('update', () => {
   });
 
   describe('Conjured items', () => {
+    it('Lowers quality and sellIn every day by two', () => {
+      const items: Item[] = [
+        new Item('Conjured Item 1', 10, 10),
+        new Item('Conjured Item 2', 9, 9),
+        new Item('Conjured Item 3', 8, 8),
+      ];
 
+      const gildedRose = new GildedRose(items);
+
+      expect(gildedRose).not.toBeNull();
+
+      expect(gildedRose.items).toHaveLength(items.length);
+      expect(gildedRose.items).toEqual(items);
+
+      // Number of days to run test
+      const daysToRun = 4;
+
+      for (let day = 0; day < daysToRun; day++) {
+        gildedRose.updateQuality();
+
+        gildedRose.items.forEach(({quality, sellIn}: Item, index: number) => {
+          expect(quality).toEqual(items[index].quality - ((day + 1) * 2));
+          expect(sellIn).toEqual(items[index].sellIn - (day + 1));
+        });
+      }
+    });
+
+    it('Lowers quality twice as fast on sellIn less than zero', () => {
+      const items: Item[] = [
+        new Item('Conjured Item 1', 1, 20),
+        new Item('Conjured Item 2', -1, 20),
+        new Item('Conjured Item 3', 10, 20),
+      ];
+
+      const gildedRose = new GildedRose(items);
+
+      expect(gildedRose).not.toBeNull();
+
+      expect(gildedRose.items).toHaveLength(items.length);
+      expect(gildedRose.items).toEqual(items);
+
+      // First Day
+      gildedRose.updateQuality();
+
+      expect(gildedRose.items[0].sellIn).toEqual(0);
+      expect(gildedRose.items[0].quality).toEqual(18);
+
+      expect(gildedRose.items[1].sellIn).toEqual(-2);
+      expect(gildedRose.items[1].quality).toEqual(16);
+
+      expect(gildedRose.items[2].sellIn).toEqual(9);
+      expect(gildedRose.items[2].quality).toEqual(18);
+
+      // Second Day
+      gildedRose.updateQuality();
+
+      expect(gildedRose.items[0].sellIn).toEqual(-1);
+      expect(gildedRose.items[0].quality).toEqual(14);
+
+      expect(gildedRose.items[1].sellIn).toEqual(-3);
+      expect(gildedRose.items[1].quality).toEqual(12);
+
+      expect(gildedRose.items[2].sellIn).toEqual(8);
+      expect(gildedRose.items[2].quality).toEqual(16);
+
+      // Third Day
+      gildedRose.updateQuality();
+
+      expect(gildedRose.items[0].sellIn).toEqual(-2);
+      expect(gildedRose.items[0].quality).toEqual(10);
+
+      expect(gildedRose.items[1].sellIn).toEqual(-4);
+      expect(gildedRose.items[1].quality).toEqual(8);
+
+      expect(gildedRose.items[2].sellIn).toEqual(7);
+      expect(gildedRose.items[2].quality).toEqual(14);
+
+      // Fourth Day
+      gildedRose.updateQuality();
+
+      expect(gildedRose.items[0].sellIn).toEqual(-3);
+      expect(gildedRose.items[0].quality).toEqual(6);
+
+      expect(gildedRose.items[1].sellIn).toEqual(-5);
+      expect(gildedRose.items[1].quality).toEqual(4);
+
+      expect(gildedRose.items[2].sellIn).toEqual(6);
+      expect(gildedRose.items[2].quality).toEqual(12);
+
+      // Fifth Day
+      gildedRose.updateQuality();
+
+      expect(gildedRose.items[0].sellIn).toEqual(-4);
+      expect(gildedRose.items[0].quality).toEqual(2);
+
+      expect(gildedRose.items[1].sellIn).toEqual(-6);
+      expect(gildedRose.items[1].quality).toEqual(0);
+
+      expect(gildedRose.items[2].sellIn).toEqual(5);
+      expect(gildedRose.items[2].quality).toEqual(10);
+
+      // Sixth Day
+      gildedRose.updateQuality();
+
+      expect(gildedRose.items[0].sellIn).toEqual(-5);
+      expect(gildedRose.items[0].quality).toEqual(0);
+
+      expect(gildedRose.items[1].sellIn).toEqual(-7);
+      expect(gildedRose.items[1].quality).toEqual(0);
+
+      expect(gildedRose.items[2].sellIn).toEqual(4);
+      expect(gildedRose.items[2].quality).toEqual(8);
+    });
   })
 });
