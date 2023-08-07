@@ -17,8 +17,10 @@ const dropQualityToZero = (item: Item): Item => {
 };
 
 const decreaseQuality = (item: Item, amount: number = 1): Item => {
-  if (item.quality - amount > MIN_QUALITY) {
+  if (item.quality - amount > MIN_QUALITY && item.quality - amount < MAX_QUALITY) {
     item.quality = item.quality - amount;
+  } else if(item.quality - amount > MAX_QUALITY) {
+    item.quality = MAX_QUALITY - amount;
   } else {
     item.quality = MIN_QUALITY;
   }
@@ -68,7 +70,7 @@ export const updateBackstagePassesItem = (item: Item): Item => {
     item = dropQualityToZero(item);
   } else if (item.sellIn <= 5) {
     item = increaseQuality(item, 3);
-  } else if (item.sellIn <= 10) {
+  } else if (item.sellIn <= 10 ) {
     item = increaseQuality(item, 2);
   } else {
     item = increaseQuality(item);
