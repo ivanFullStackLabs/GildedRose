@@ -35,15 +35,17 @@ export default class GildedRose {
   }
 
   updateQuality(): Item[] {
-    return this.items.map((item: Item) => {
-      if (item.name.toUpperCase().includes(ITEM_TYPES.SULFURAS)) {
+    
+    const itemsUpdatedQuality: Item[] = this.items.map((item: Item) => {
+      const itemName = item.name.toUpperCase();
+      if (itemName.includes(ITEM_TYPES.SULFURAS)) {
         item = updateSulfurasItem(item);
-      } else if (item.name.toUpperCase().includes(ITEM_TYPES.AGED_BRIE)) {
+      } else if (itemName.includes(ITEM_TYPES.AGED_BRIE)) {
         item = updateAgedBrieItem(item);
-      } else if (item.name.toUpperCase().includes(ITEM_TYPES.CONJURED)) {
+      } else if (itemName.includes(ITEM_TYPES.CONJURED)) {
         item = updateConjuredItem(item);
       } else if (
-        item.name.toUpperCase().includes(ITEM_TYPES.BACKSTAGE_PASSES)
+        itemName.includes(ITEM_TYPES.BACKSTAGE_PASSES)
       ) {
         item = updateBackstagePassesItem(item);
       } else {
@@ -52,5 +54,9 @@ export default class GildedRose {
 
       return item;
     });
+
+    this.items = itemsUpdatedQuality;
+
+    return this.items
   }
 }

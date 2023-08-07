@@ -27,8 +27,7 @@ const decreaseQuality = (item: Item, amount: number = 1): Item => {
 };
 
 const decreaseSellIn = (item: Item, amount: number = 1): Item => {
-    item.sellIn = item.sellIn - amount;
-    return item;
+    return { ...item, sellIn: item.sellIn - amount };
 }
 
 export const updateNormalItem = (item: Item): Item => {
